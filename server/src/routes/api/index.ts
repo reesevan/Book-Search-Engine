@@ -2,9 +2,10 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { typeDefs, resolvers } from './schemas'; // you'll create these
+import { typeDefs, resolvers } from './schemas.js';   // note .js here for ESM
 import { authMiddleware } from './utils/auth.js';
-import db from './config/connection.ts'; 
+import db from './config/connection.js';               // also change to .js
+
 
 // Fixes __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);

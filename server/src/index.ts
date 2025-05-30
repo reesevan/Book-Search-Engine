@@ -3,31 +3,36 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import { authMiddleware } from './src/utils/auth.js';
+import { authMiddleware } from './utils/auth';
 import connectDB from './config/connection';
 
-import typeDefs from './src/schemas/typeDefs.js';
-import resolvers from './src/schemas/resolvers.js';
-
-const app = express();
-const PORT = process.env.PORT || 4000;
+import typeDefs from './schemas/typeDefs';
+import resolvers from './schemas/resolvers';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const PORT = process.env.PORT || 4000;
+
 async function startServer() {
-  // Connect to the DB first
   await connectDB();
 
-  // Setup Apollo Server
+  const app = express();
+
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  // Simple root route
+  app.get('/', (_req, res) => {
+    res.send('Welcome to the Book Search Engine API');
+  });
+
   const server = new ApolloServer({
     typeDefs,
     resolvers,
   });
-  await server.start();
 
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
+  await server.start();
 
   app.use(
     '/graphql',
@@ -43,7 +48,6 @@ async function startServer() {
     });
   }
 
-  // Start Express server
   app.listen(PORT, () => {
     console.log(`🌍 Server running at http://localhost:${PORT}`);
     console.log(`🚀 GraphQL endpoint at http://localhost:${PORT}/graphql`);

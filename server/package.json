@@ -5,31 +5,33 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-  "build": "tsc",
-  "start": "node dist/server.js",
-  "watch": "nodemon dist/server.js",
-  "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
-
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "watch": "nodemon dist/server.js",
+    "dev": "NODE_OPTIONS='--loader ts-node/esm' ts-node --esm src/server.ts",
+    "dev:ts-node": "NODE_OPTIONS='--loader ts-node/esm' ts-node --esm src/server.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/server": "^4.12.1",
+    "apollo-server-express": "^3.13.0",
     "bcrypt": "^4.0.1",
-    "brcypt": "^1.0.1",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
+    "graphql": "^16.8.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^8.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/express": "^4.17.21",
+    "@types/express": "^4.17.22",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.8",
     "dotenv": "^16.4.5",
-    "nodemon": "^3.1.0",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }
 }
