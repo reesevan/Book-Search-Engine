@@ -3,13 +3,7 @@ import jwt from 'jsonwebtoken';
 const secret = process.env.JWT_SECRET || 'mysecret';
 const expiration = '2h';
 
-export function signToken({ username, email, _id }) {
-  const payload = { username, email, _id };
-  return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
-}
-
 export function authMiddleware({ req }) {
-  // Get token from headers or query
   let token = req.body.token || req.query.token || req.headers.authorization;
 
   if (req.headers.authorization) {
@@ -17,15 +11,14 @@ export function authMiddleware({ req }) {
   }
 
   if (!token) {
-    return req;
+    return {};  // No token, return empty context
   }
 
   try {
     const { data } = jwt.verify(token, secret, { maxAge: expiration });
-    req.user = data;
+    return { user: data };  // Attach user to context
   } catch {
     console.log('Invalid token');
+    return {};  // Return empty context on failure
   }
-
-  return req;
 }
